@@ -2,9 +2,9 @@ const Celebrity = require("../models/Celebrity.model")
 const Movie = require("../models/Movie.model")
 // starter code in both routes/celebrities.routes.js and routes/movies.routes.js
 const router = require("express").Router();
-
+const { isLoggedIn, isLoggedOut } = require("./../middleware/route-guard")
 // all your routes here
-router.get('/movies/create', (req, res, next) => {
+router.get('/movies/create', isLoggedIn, (req, res, next) => {
     // Iteration #6: Adding New Movies
     Celebrity.find({})
         .then((celibridadesEncontradas) => {
@@ -27,7 +27,7 @@ router.post('/movies/create', (req, res, next) => {
             res.render('movies/new-movie')
         })
 })
-router.get('/movies', (req, res, next) => {
+router.get('/movies', isLoggedIn, (req, res, next) => {
     // Iteration #7: Listing Our Movies
     Movie.find({})
         .then((movies) => {
@@ -38,7 +38,7 @@ router.get('/movies', (req, res, next) => {
         })
         .catch(err => next(err))
 })
-router.get("/movies/:id", (req, res, next) => {
+router.get("/movies/:id", isLoggedIn, (req, res, next) => {
     const {id} = req.params
     Movie.findById(id)
         .populate('cast')
@@ -54,7 +54,7 @@ router.post('/movies/:id/delete', (req, res) => {
         .then(() => res.redirect("/movies"))
         .catch((err) => console.log(err))
 })
-router.get('/movies/:id/edit', (req, res) => {
+router.get('/movies/:id/edit', isLoggedIn, (req, res) => {
     const { id } = req.params
     Movie.findById(id)
         .polulate('cast')

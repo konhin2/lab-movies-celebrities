@@ -2,9 +2,9 @@ const Celebrity = require("../models/Celebrity.model");
 
 // starter code in both routes/celebrities.routes.js and routes/movies.routes.js
 const router = require("express").Router();
-
+const { isLoggedIn, isLoggedOut } = require("./../middleware/route-guard")
 // all your routes here
-router.get('/celebrities/create', (req, res, next) => {
+router.get('/celebrities/create', isLoggedIn, (req, res, next) => {
     // Iteration #3: Adding New Celebrities
     res.render('celebrities/new-celebrity')
 })
@@ -30,7 +30,7 @@ router.post('/celebrities/create', (req, res, next) => {
         })
 })
 
-router.get('/celebrities', (req, res, next) => {
+router.get('/celebrities', isLoggedIn, (req, res, next) => {
     // Iteration #4: Listing Our Celebrities
     Celebrity.find({})
         .then((celebrity) => {
